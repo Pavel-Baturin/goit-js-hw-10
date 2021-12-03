@@ -16,8 +16,7 @@ inputRef.addEventListener('input', debounce(onFormInput, DEBOUNCE_DELAY));
 function onFormInput() {
     const searchQuery = inputRef.value.trim();
     if (!searchQuery) {
-        countryInfoRef.innerHTML = "";
-        countryListRef.innerHTML = "";
+        removeMarkup();
         return
     }
     fetchCountries(searchQuery).then(renderCountryCard).catch(onFetchError);
@@ -37,12 +36,17 @@ function renderCountryCard(country) {
         countryListRef.innerHTML = "";
         Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
     } else {
-        countryInfoRef.innerHTML = "";
-        countryListRef.innerHTML = "";
-        Notiflix.Notify.failure("Oops, there is no country with that name");
-    }     
+        return;
+    }
 }
 
 function onFetchError(error) {
+    removeMarkup();
     console.log(error);
+    Notiflix.Notify.failure("Oops, there is no country with that name");
+}
+
+function removeMarkup() {
+    countryInfoRef.innerHTML = "";
+    countryListRef.innerHTML = "";
 }
